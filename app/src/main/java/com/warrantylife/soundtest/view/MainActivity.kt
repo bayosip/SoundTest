@@ -15,12 +15,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent{
             Scaffold {
                 Box(modifier = Modifier.fillMaxSize()) {
+                    SoundTestScreen(viewModel)
                 }
             }
         }
