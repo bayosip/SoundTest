@@ -20,32 +20,35 @@ class MainViewModel @Inject constructor(
     val generateSoundUseCase: GenerateSoundUseCase
 ) : ViewModel() {
 
-    private val TAG = javaClass.canonicalName
     private val state: MutableState<ScreenState> = mutableStateOf(ScreenState())
     val _state: State<ScreenState> = state
 
-
-    fun setUserFrequency(inputFrequency: Int = 12000) {
-        viewModelScope.launch(Dispatchers.Default) {
-            generateSoundUseCase(inputFrequency).collectLatest { audio: AudioTrack ->
-                withContext(Dispatchers.Main) {
-                    state.value = _state.value.copy(
-                        inputFrequency = inputFrequency,
-                        audio = audio,
-                    )
+    fun setUserFrequency(inputFrequency: Int) {
+        if (inputFrequency in 0..24000) {
+            viewModelScope.launch(Dispatchers.Default) {
+                generateSoundUseCase(inputFrequency).collectLatest { audio: AudioTrack ->
+                    withContext(Dispatchers.Main) {
+                        state.value = _state.value.copy(
+                            inputFrequency = inputFrequency,
+                            audio = audio,
+                        )
+                    }
                 }
             }
-        }
+        } else state.value = _state.value.copy(
+            msg = "Error! 0-24000 hz only!",
+            inputFrequency = -1
+        )
     }
+
     fun playTrack() {
         // start playing audio and release resources when done
         if (_state.value.audio?.state != AudioTrack.STATE_UNINITIALIZED) {
             _state.value.audio?.play()
             Thread.sleep(Constants.durationMs.toLong())
             _state.value.audio?.release()
-        }
-        else{
-            setUserFrequency()
+        } else {
+            setUserFrequency(_state.value.inputFrequency)
             if (_state.value.audio?.state == AudioTrack.STATE_INITIALIZED)
                 playTrack()
         }
