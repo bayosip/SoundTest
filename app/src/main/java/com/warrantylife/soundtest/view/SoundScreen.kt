@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,7 +26,31 @@ fun SoundTestScreen(viewModel: MainViewModel){
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val (playButton)= createRefs()
+        val (frequencyInput, enter, frequencyText, playButton)= createRefs()
+        TextField(
+            value = frequency.value,
+            onValueChange = {
+                frequency.value = it
+            },
+            label = { Text("Label") }
+        )
+        Text(text = "${frequency.value} Hz")
+
+        Button(
+            onClick = {viewModel.playTrack()},
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .constrainAs(playButton) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                }) {
+            Text(text = "Play")
+        }
+
         Button(
             onClick = {viewModel.playTrack()},
             modifier = Modifier

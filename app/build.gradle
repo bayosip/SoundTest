@@ -47,7 +47,7 @@ android {
 }
 
 dependencies {
-
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.core:core-ktx:1.8.0"
     implementation "androidx.appcompat:appcompat:1.4.2"
@@ -84,9 +84,6 @@ dependencies {
     // Integration with observables
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
-
-    //Exoplayer
-    implementation "com.google.android.exoplayer:exoplayer:2.18.4"
 
     //Dependency Injection With Hilt
     implementation "com.google.dagger:hilt-android:2.44"

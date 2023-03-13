@@ -25,7 +25,7 @@ class MainViewModel @Inject constructor(
     val _state: State<ScreenState> = state
 
 
-    fun setUserFrequency(inputFrequency: Int = 1200) {
+    fun setUserFrequency(inputFrequency: Int = 12000) {
         viewModelScope.launch(Dispatchers.Default) {
             generateSoundUseCase(inputFrequency).collectLatest { audio: AudioTrack ->
                 withContext(Dispatchers.Main) {
@@ -39,8 +39,15 @@ class MainViewModel @Inject constructor(
     }
     fun playTrack() {
         // start playing audio and release resources when done
-        _state.value.audio?.play()
-        Thread.sleep(Constants.durationMs.toLong())
-        _state.value.audio?.release()
+        if (_state.value.audio?.state != AudioTrack.STATE_UNINITIALIZED) {
+            _state.value.audio?.play()
+            Thread.sleep(Constants.durationMs.toLong())
+            _state.value.audio?.release()
+        }
+        else{
+            setUserFrequency()
+            if (_state.value.audio?.state == AudioTrack.STATE_INITIALIZED)
+                playTrack()
+        }
     }
 }
