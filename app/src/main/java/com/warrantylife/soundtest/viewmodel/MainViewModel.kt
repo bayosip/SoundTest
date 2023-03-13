@@ -37,7 +37,8 @@ class MainViewModel @Inject constructor(
             }
         } else state.value = _state.value.copy(
             msg = "Error! 0-24000 hz only!",
-            inputFrequency = -1
+            inputFrequency = -1,
+            audio = null,
         )
     }
 
